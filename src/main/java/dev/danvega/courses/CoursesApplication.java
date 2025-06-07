@@ -6,6 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.util.Arrays;
 import java.util.List;
 
 @SpringBootApplication
@@ -17,7 +18,7 @@ public class CoursesApplication {
 
 	@Bean
 	public List<ToolCallback> danTools(CourseService courseService) {
-		return List.of(ToolCallbacks.from(courseService));
+		return Arrays.asList(ToolCallbacks.from(courseService));
 	}
 
 }
