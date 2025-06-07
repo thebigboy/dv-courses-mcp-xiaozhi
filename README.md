@@ -1,4 +1,18 @@
-# Spring AI MCP Server for Course Information
+# Spring AI MCP Server for Course Information + baiduMap + calender 服务，连接小智以做测试。
+
+## 写在前面：
+由于对python的熟悉不够，在cursor中尝试了几次都未能将多个mcp的服务组合到一起给小智进行mcp的服务交互。于是乎，将https://github.com/danvega/dv-courses-mcp 这个示例程序做了改造。以便能快速上手，过程中使用cursor几乎是几分钟完成了平时几个小时的工作，尤其是在Mac下，通过脚本来创建日历。真的是感叹，AI真的很快要替代一部分程序猿了。
+执行后的效果：
+mcp连接启动后：
+![image](https://github.com/user-attachments/assets/f2d1a0e0-e335-4163-898e-898e9d5f41d4)
+
+对话效果：
+![image](https://github.com/user-attachments/assets/633b9cc8-d544-4924-8444-323cadc77f59)
+
+![image](https://github.com/user-attachments/assets/078e467c-575f-4a10-956f-2f0956ef59c3)
+
+![image](https://github.com/user-attachments/assets/967937b1-c5c8-426d-8de4-ac335d225ffb)
+
 
 ## Overview
 
@@ -211,6 +225,30 @@ This configuration:
 Make sure to adjust the paths to match your specific environment:
 - Update the Java path to match your installation
 - Update the JAR file path to where your compiled application is located
+
+在application.properties中修改以下两项配置，通过CoursesApplication，启动即可。
+```
+#endpoint=换成自己在小智AI控制台上的wss地址
+##https://xiaozhi.me/console/agents/334992/config
+#
+#
+#baidu.map.api.key=换成自己在百度地图上的key
+##百度地图开放平台的API-key
+```
+
+结果示例：
+
+<img width="1704" alt="image" src="https://github.com/user-attachments/assets/63eb34db-ef2d-4e9d-9ba7-a4e267db0092" />
+
+
+![image](https://github.com/user-attachments/assets/f2d1a0e0-e335-4163-898e-898e9d5f41d4)
+
+
+
+
+
+
+
 
 ## Conclusion
 
