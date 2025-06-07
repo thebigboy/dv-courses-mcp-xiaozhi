@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <appender name="rollingAppend" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>/app/logs/mcp/mcp-server.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>/app/logs/mcp/mcp-server-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>365</maxHistory>
+            <totalSizeCap>30GB</totalSizeCap>
+            <maxFileSize>100MB</maxFileSize>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%level] [erp] [%X{traceId}] [%thread] [s]%logger[%L][e]-%msg %n </pattern>
+            <charset>utf-8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%level] [erp] [%X{traceId}] [%thread] [s]%logger[%L][e]-%msg %n </pattern>
+        </encoder>
+    </appender>
+
+    <root level="info">
+        <appender-ref ref="rollingAppend" />
+        <appender-ref ref="stdout" />
+    </root>
+
+</configuration>
