@@ -1,101 +1,137 @@
-# Spring AI MCP Server for Course Information
+# Spring AI MCP Server - 多功能服务集成
 
-## Overview
+基于 Spring Boot 实现的 MCP (Model Control Protocol) 服务器，集成了课程信息查询、百度地图和日历管理等多项功能，可与小智 AI 进行交互。
 
-This repository contains a Spring Boot application that implements the Model Control Protocol (MCP) server for providing course information. The application creates a lightweight server that can expose course data through the Spring AI MCP framework, allowing AI models to interact with your custom data services using standardized tooling.
+## 项目背景
 
-The server exposes two main tools:
-- A tool to retrieve all available courses
-- A tool to search for specific courses by title
+本项目基于 [dv-courses-mcp](https://github.com/danvega/dv-courses-mcp) 改造而来。由于对 Python 不够熟悉，在尝试将多个 MCP 服务组合给小智进行交互时遇到困难，因此选择使用 Spring Boot 框架进行开发。借助 Cursor 的 AI 辅助，快速完成了开发工作，特别是在 Mac 下通过脚本创建日历功能。
 
-This implementation serves as an excellent starting point for creating your own Model Control Protocol servers or for integrating external data sources with AI models through Spring AI.
+## 功能演示
 
-## Project Requirements
+### MCP 连接启动效果
+![image](https://github.com/user-attachments/assets/f2d1a0e0-e335-4163-898e-898e9d5f41d4)
+
+### 对话交互效果
+![image](https://github.com/user-attachments/assets/633b9cc8-d544-4924-8444-323cadc77f59)
+
+![image](https://github.com/user-attachments/assets/078e467c-575f-4a10-956f-2f0956ef59c3)
+
+![image](https://github.com/user-attachments/assets/967937b1-c5c8-426d-8de4-ac335d225ffb)
+
+
+## 项目简介
+
+本项目是一个基于 Spring Boot 的 MCP (Model Control Protocol) 服务器实现，提供以下核心功能：
+
+- **课程信息查询**：获取课程列表和详细信息
+- **百度地图服务**：地理位置查询和路径规划
+- **日历管理**：创建和管理日历事件
+
+通过 Spring AI MCP 框架，将这些服务统一封装为标准化的工具，供 AI 模型（如小智 AI）调用，实现智能化的数据服务交互。
+
+## 技术栈
 
 - Java 24
 - Maven 3.8+
 - Spring Boot 3.4.4
 - Spring AI 1.0.0-M6
+- 百度地图 API
 
-## Dependencies
+## 核心依赖
 
-The project relies on the following key dependencies:
+### Spring AI MCP Server
+提供 MCP 协议服务器的基础实现：
 
-- **Spring AI MCP Server**: Provides the foundation for creating MCP-compatible servers
-  ```xml
-  <dependency>
-      <groupId>org.springframework.ai</groupId>
-      <artifactId>spring-ai-mcp-server-spring-boot-starter</artifactId>
-  </dependency>
-  ```
+```xml
+<dependency>
+    <groupId>org.springframework.ai</groupId>
+    <artifactId>spring-ai-mcp-server-spring-boot-starter</artifactId>
+</dependency>
+```
 
-- **Spring Boot Test**: For testing the application
-  ```xml
-  <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-test</artifactId>
-      <scope>test</scope>
-  </dependency>
-  ```
+### Spring Boot Test
+用于应用测试：
 
-## Getting Started
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-test</artifactId>
+    <scope>test</scope>
+</dependency>
+```
 
-### Prerequisites
+## 快速开始
 
-Before running the application, make sure you have:
-- Java 24 installed on your system
-- Maven installed for dependency management
-- Basic understanding of Spring Boot applications
+### 环境要求
 
-### Setting Up the Project
+- Java 24
+- Maven 3.8+
+- 百度地图 API Key（[申请地址](https://lbsyun.baidu.com/apiconsole/key)）
+- 小智 AI WebSocket 地址（[获取地址](https://xiaozhi.me/console)）
 
-1. Review the project structure to understand the components:
-    - `Course.java`: A simple record representing course data
-    - `CourseService.java`: Service with MCP tool annotations
-    - `CoursesApplication.java`: Main application class with tool registration
-    - `application.properties`: Configuration for the MCP server
+### 配置说明
 
-2. The application is configured to run as a non-web application using STDIO transport for MCP communication:
-   ```properties
-   spring.main.web-application-type=none
-   spring.ai.mcp.server.name=dan-vega-mcp
-   spring.ai.mcp.server.version=0.0.1
-   
-   # These settings are critical for STDIO transport
-   spring.main.banner-mode=off
-   logging.pattern.console=
-   ```
+在运行应用之前，需要在 `application.properties` 中配置以下参数：
 
-## How to Run the Application
+```properties
+# 小智 AI WebSocket 端点
+# 从小智 AI 控制台获取: https://xiaozhi.me/console/agents/{your-agent-id}/config
+endpoint=wss://your-xiaozhi-endpoint
 
-Running the application is straightforward with Maven:
+# 百度地图 API Key
+# 从百度地图开放平台获取: https://lbsyun.baidu.com/apiconsole/key
+baidu.map.api.key=your-baidu-map-api-key
+
+# MCP 服务器基础配置
+spring.main.web-application-type=none
+spring.ai.mcp.server.name=dan-vega-mcp
+spring.ai.mcp.server.version=0.0.1
+
+# STDIO 传输配置（关键设置）
+spring.main.banner-mode=off
+logging.pattern.console=
+```
+
+### 项目结构
+
+主要组件说明：
+- `Course.java`: 课程数据模型
+- `CourseService.java`: 课程服务，包含 MCP 工具注解
+- `CoursesApplication.java`: 主应用类，负责工具注册
+- `application.properties`: MCP 服务器配置文件
+
+### 运行应用
+
+使用 Maven 启动应用：
 
 ```bash
 mvn spring-boot:run
 ```
 
-The application will start as a Model Control Protocol server accessible via standard input/output. It doesn't open any network ports or provide a web interface, as indicated by the `spring.main.web-application-type=none` configuration.
+或者直接运行主类 `CoursesApplication`。
 
-When running, the server registers two tools with the MCP:
-- `dv_get_courses`: Returns all available courses
-- `dv_get_course`: Returns a specific course by title
+应用启动后将作为 MCP 服务器运行，通过标准输入/输出与 AI 模型通信。由于配置了 `spring.main.web-application-type=none`，应用不会开启 Web 端口或提供 HTTP 接口。
 
-## Understanding the Code
+### 运行效果
 
-### Defining Data Models
+<img width="1704" alt="运行效果展示" src="https://github.com/user-attachments/assets/63eb34db-ef2d-4e9d-9ba7-a4e267db0092" />
 
-The application uses a simple record to represent course data:
+## 技术实现
+
+### 数据模型定义
+
+使用 Java Record 定义课程数据结构：
 
 ```java
 public record Course(String title, String url) {
 }
 ```
 
-This immutable data structure provides a clean way to represent course information with title and URL attributes.
+这个不可变的数据结构简洁地表示了课程信息，包含标题和 URL 属性。
 
-### Implementing Tool Functions
+### 实现 MCP 工具
 
-The `CourseService` class demonstrates how to create MCP tools using the `@Tool` annotation:
+`CourseService` 类展示了如何使用 `@Tool` 注解创建 MCP 工具：
 
 ```java
 @Service
@@ -118,7 +154,7 @@ public class CourseService {
     @PostConstruct
     public void init() {
         courses.addAll(List.of(
-                new Course("Building Web Applications with Spring Boot (FreeCodeCamp)", 
+                new Course("Building Web Applications with Spring Boot (FreeCodeCamp)",
                           "https://youtu.be/31KTdfRH6nY"),
                 new Course("Spring Boot Tutorial for Beginners - 2023 Crash Course using Spring Boot 3",
                           "https://youtu.be/UgX5lgv4uVM")
@@ -127,13 +163,13 @@ public class CourseService {
 }
 ```
 
-The `@Tool` annotation transforms regular methods into MCP-compatible tools with:
-- A unique name for identification
-- A description that helps AI models understand the tool's purpose
+`@Tool` 注解将普通方法转换为 MCP 兼容的工具，需要指定：
+- **name**: 工具的唯一标识符
+- **description**: 帮助 AI 模型理解工具用途的描述信息
 
-### Registering Tools with MCP
+### 注册工具到 MCP
 
-In the main application class, tools are registered with the MCP framework:
+在主应用类中，将工具注册到 MCP 框架：
 
 ```java
 @SpringBootApplication
@@ -150,21 +186,18 @@ public class CoursesApplication {
 }
 ```
 
-The `ToolCallbacks.from()` method scans the service class for `@Tool` annotations and registers them with the MCP framework.
+`ToolCallbacks.from()` 方法会扫描服务类中的 `@Tool` 注解，并将它们注册到 MCP 框架中。
 
-## Extending the Project
+## 功能扩展
 
-You can extend this project in several ways:
+### 可扩展方向
 
-1. **Add more courses**: Modify the `init()` method in `CourseService` to include additional courses.
+1. **添加更多课程**：修改 `CourseService` 中的 `init()` 方法
+2. **创建新工具**：添加带有 `@Tool` 注解的方法来扩展功能
+3. **数据库持久化**：将内存列表替换为数据库存储
+4. **增强搜索能力**：实现模糊搜索、标签过滤等高级功能
 
-2. **Create new tool functions**: Add more methods with the `@Tool` annotation to expose additional functionality.
-
-3. **Implement database storage**: Replace the in-memory list with a database connection to store course information persistently.
-
-4. **Add search capabilities**: Implement more advanced search functions beyond exact title matching.
-
-Example of adding a search function:
+### 示例：添加搜索功能
 
 ```java
 @Tool(name = "dv_search_courses", description = "Search courses containing a keyword")
@@ -175,47 +208,64 @@ public List<Course> searchCourses(String keyword) {
 }
 ```
 
-## Using the MCP Server with AI Models
+## 与 AI 模型集成
 
-To utilize this MCP server with AI models:
+### 小智 AI 集成
 
-1. Ensure your AI framework supports the Model Control Protocol
-2. Connect the AI model to the MCP server using STDIO transport
-3. The AI model can then invoke the exposed tools:
-    - Request a list of all courses
-    - Retrieve details about a specific course by title
+本项目主要用于与小智 AI 进行集成，配置步骤：
 
-This allows AI models to access real-time course information and provide it in responses to user queries.
+1. 在 `application.properties` 中配置小智 AI 的 WebSocket 端点
+2. 配置百度地图 API Key（如需使用地图功能）
+3. 启动应用，应用会通过 STDIO 传输与小智 AI 建立连接
+4. AI 可以调用已注册的工具来获取课程信息、查询地图等
 
-### Configuration for Claude Desktop Client
+### Claude Desktop Client 配置（可选）
 
-To use this MCP server with the Claude Desktop client, you need to add configuration to tell Claude where to find the server. Add the following configuration to your Claude Desktop setup:
+如果需要与 Claude Desktop 客户端配合使用，可以添加以下配置：
 
 ```json
 {
   "dan-vega-mcp": {
-    "command": "/Users/vega/.sdkman/candidates/java/current/bin/java",
+    "command": "/path/to/java",
     "args": [
       "-jar",
-      "/Users/vega/Downloads/courses/target/courses-0.0.1-SNAPSHOT.jar"
+      "/path/to/courses-0.0.1-SNAPSHOT.jar"
     ]
   }
 }
 ```
 
-This configuration:
-- Creates a tool named "dan-vega-mcp" in Claude Desktop
-- Specifies the path to your Java executable
-- Provides arguments to run the compiled JAR file
+配置说明：
+- **command**: Java 可执行文件的路径
+- **args**: 运行 JAR 文件的参数
 
-Make sure to adjust the paths to match your specific environment:
-- Update the Java path to match your installation
-- Update the JAR file path to where your compiled application is located
+请根据实际环境调整路径：
+- 更新 Java 路径（如使用 SDKMAN: `~/.sdkman/candidates/java/current/bin/java`）
+- 更新 JAR 文件路径到编译后的实际位置
 
-## Conclusion
+## 可用工具列表
 
-This Spring AI MCP Server provides a clean, extensible framework for exposing course data through the Model Control Protocol. By following the Spring AI conventions and leveraging the tool annotation system, you can create powerful integrations between AI models and your data services.
+运行后，服务器会注册以下工具供 AI 调用：
 
-The project demonstrates how to structure your code for MCP compatibility while maintaining good software design practices. With this foundation, you can build more complex data providers that enhance AI capabilities with access to custom, domain-specific information.
+- **dv_get_courses**: 获取所有可用课程列表
+- **dv_get_course**: 根据标题获取特定课程信息
+- **百度地图相关工具**: 地理位置查询、路径规划等（需配置 API Key）
+- **日历管理工具**: 创建和管理日历事件（Mac 系统）
 
-For more information about Spring AI and the Model Control Protocol, refer to the official documentation.
+## 总结
+
+本项目提供了一个简洁、可扩展的框架，用于通过 Model Control Protocol 暴露多种服务能力。通过遵循 Spring AI 的约定和使用工具注解系统，可以轻松创建 AI 模型与数据服务之间的强大集成。
+
+项目展示了如何在保持良好软件设计实践的同时构建 MCP 兼容的代码。基于这个基础，可以构建更复杂的数据提供者，为 AI 提供访问自定义领域特定信息的能力。
+
+## 参考资源
+
+- [Spring AI 官方文档](https://spring.io/projects/spring-ai)
+- [小智 AI 控制台](https://xiaozhi.me/console)
+- [百度地图开放平台](https://lbsyun.baidu.com/)
+- [原始项目 dv-courses-mcp](https://github.com/danvega/dv-courses-mcp)
+
+## 许可证
+
+本项目基于原 dv-courses-mcp 项目改造，遵循相应的开源许可证。
+
