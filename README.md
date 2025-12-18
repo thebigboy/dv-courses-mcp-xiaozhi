@@ -219,30 +219,6 @@ public List<Course> searchCourses(String keyword) {
 3. 启动应用，应用会通过 STDIO 传输与小智 AI 建立连接
 4. AI 可以调用已注册的工具来获取课程信息、查询地图等
 
-### Claude Desktop Client 配置（可选）
-
-如果需要与 Claude Desktop 客户端配合使用，可以添加以下配置：
-
-```json
-{
-  "dan-vega-mcp": {
-    "command": "/path/to/java",
-    "args": [
-      "-jar",
-      "/path/to/courses-0.0.1-SNAPSHOT.jar"
-    ]
-  }
-}
-```
-
-配置说明：
-- **command**: Java 可执行文件的路径
-- **args**: 运行 JAR 文件的参数
-
-请根据实际环境调整路径：
-- 更新 Java 路径（如使用 SDKMAN: `~/.sdkman/candidates/java/current/bin/java`）
-- 更新 JAR 文件路径到编译后的实际位置
-
 ## 可用工具列表
 
 运行后，服务器会注册以下工具供 AI 调用：
